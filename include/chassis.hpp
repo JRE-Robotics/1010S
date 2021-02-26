@@ -7,6 +7,6 @@
 #include "ports.h"
 
 // Functions
-std::shared_ptr<okapi::ChassisController> build_chassis_controller();
+std::shared_ptr<okapi::OdomChassisController> build_chassis_controller();
 
 #endif  // #ifndef _CHASSIS_H_

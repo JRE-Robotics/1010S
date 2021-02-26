@@ -52,11 +52,20 @@ void competition_initialize() {
  */
 
 void autonomous() {
-  // Init chassis controller and set brake mode
-  std::shared_ptr<okapi::ChassisController> chassis = build_chassis_controller();
+  // Init chassis controller and set brake mode + velocity
+  std::shared_ptr<okapi::OdomChassisController> chassis = build_chassis_controller();
   chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
   chassis->setMaxVelocity(50);
-  chassis->moveDistance(0.1_m);
+
+  // One-point auto (disabled)
+  // chassis->getModel()->forward(100);
+  // pros::delay(1000);
+  // chassis->getModel()->forward(-100);
+  // pros::delay(500);
+  // chassis->getModel()->forward(100);
+  // pros::delay(1000);
+  // chassis->getModel()->forward(-100);
+  // pros::delay(500);
 }
 
 /**
@@ -74,8 +83,13 @@ void autonomous() {
  */
 void opcontrol() {
   // Init chassis controller and V5 controller
-  std::shared_ptr<okapi::ChassisController> chassis = build_chassis_controller();
+  std::shared_ptr<okapi::OdomChassisController> chassis = build_chassis_controller();
   okapi::Controller controller;
+
+  // Init motors
+  okapi::Motor intake_l(INTAKE_LEFT_MOTOR_PORT, true, okapi::AbstractMotor::gearset::green, okapi::AbstractMotor::encoderUnits::rotations);
+  okapi::Motor intake_r(INTAKE_RIGHT_MOTOR_PORT, false, okapi::AbstractMotor::gearset::green, okapi::AbstractMotor::encoderUnits::rotations);
+  okapi::Motor rollers(ROLLER_MOTOR_PORT, false, okapi::AbstractMotor::gearset::blue, okapi::AbstractMotor::encoderUnits::rotations);
 
   // Default modes
   DRIVETRAIN_MODE dt_mode = FAST;
@@ -83,6 +97,9 @@ void opcontrol() {
 
   // Set brake mode
   chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+  intake_l.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+  intake_r.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+  rollers.setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
 
   // Initialize LCD
   lcd::init();
@@ -157,6 +174,37 @@ void opcontrol() {
       double right = (dt_mode == FAST) ? right_y : right_y / 4.0;
 
       chassis->getModel()->tank(left, right);
+    }
+
+    // ----------
+    // Intakes
+    // ----------
+
+    if (controller.getDigital(okapi::ControllerDigital::R1)) {
+      intake_l.moveVelocity(200);
+      intake_r.moveVelocity(200);
+    }
+    else if (controller.getDigital(okapi::ControllerDigital::R2)) {
+      intake_l.moveVelocity(-200);
+      intake_r.moveVelocity(-200);
+    }
+    else {
+      intake_l.moveVelocity(0);
+      intake_r.moveVelocity(0);
+    }
+
+    // ----------
+    // Rollers
+    // ----------
+
+    if (controller.getDigital(okapi::ControllerDigital::L1)) {
+      rollers.moveVelocity(600);
+    }
+    else if (controller.getDigital(okapi::ControllerDigital::L2)) {
+      rollers.moveVelocity(-600);
+    }
+    else {
+      rollers.moveVelocity(0);
     }
 
     // ----------
