@@ -89,7 +89,8 @@ void opcontrol() {
   // Init motors
   okapi::Motor intake_l(INTAKE_LEFT_MOTOR_PORT, true, okapi::AbstractMotor::gearset::green, okapi::AbstractMotor::encoderUnits::rotations);
   okapi::Motor intake_r(INTAKE_RIGHT_MOTOR_PORT, false, okapi::AbstractMotor::gearset::green, okapi::AbstractMotor::encoderUnits::rotations);
-  okapi::Motor rollers(ROLLER_MOTOR_PORT, false, okapi::AbstractMotor::gearset::blue, okapi::AbstractMotor::encoderUnits::rotations);
+  okapi::Motor rollers_front(ROLLERS_FRONT_MOTOR_PORT, true, okapi::AbstractMotor::gearset::blue, okapi::AbstractMotor::encoderUnits::rotations);
+  okapi::Motor rollers_back(ROLLERS_BACK_MOTOR_PORT, false, okapi::AbstractMotor::gearset::blue, okapi::AbstractMotor::encoderUnits::rotations);
 
   // Default modes
   DRIVETRAIN_MODE dt_mode = FAST;
@@ -99,7 +100,8 @@ void opcontrol() {
   chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
   intake_l.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
   intake_r.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
-  rollers.setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
+  rollers_front.setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
+  rollers_back.setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
 
   // Initialize LCD
   lcd::init();
@@ -180,11 +182,11 @@ void opcontrol() {
     // Intakes
     // ----------
 
-    if (controller.getDigital(okapi::ControllerDigital::R1)) {
+    if (controller.getDigital(okapi::ControllerDigital::L1)) {
       intake_l.moveVelocity(200);
       intake_r.moveVelocity(200);
     }
-    else if (controller.getDigital(okapi::ControllerDigital::R2)) {
+    else if (controller.getDigital(okapi::ControllerDigital::R1)) {
       intake_l.moveVelocity(-200);
       intake_r.moveVelocity(-200);
     }
@@ -197,14 +199,17 @@ void opcontrol() {
     // Rollers
     // ----------
 
-    if (controller.getDigital(okapi::ControllerDigital::L1)) {
-      rollers.moveVelocity(600);
+    if (controller.getDigital(okapi::ControllerDigital::L2)) {
+      rollers_front.moveVelocity(600);
+      rollers_back.moveVelocity(600);
     }
-    else if (controller.getDigital(okapi::ControllerDigital::L2)) {
-      rollers.moveVelocity(-600);
+    else if (controller.getDigital(okapi::ControllerDigital::R2)) {
+      rollers_front.moveVelocity(-600);
+      rollers_back.moveVelocity(-600);
     }
     else {
-      rollers.moveVelocity(0);
+      rollers_front.moveVelocity(0);
+      rollers_back.moveVelocity(0);
     }
 
     // ----------

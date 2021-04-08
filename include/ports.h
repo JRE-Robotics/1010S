@@ -12,6 +12,7 @@
 // Other ports
 #define INTAKE_LEFT_MOTOR_PORT 2
 #define INTAKE_RIGHT_MOTOR_PORT 4
-#define ROLLER_MOTOR_PORT 14
+#define ROLLERS_FRONT_MOTOR_PORT 14
+#define ROLLERS_BACK_MOTOR_PORT 16
 
 #endif  // #ifndef _PORTS_H_
