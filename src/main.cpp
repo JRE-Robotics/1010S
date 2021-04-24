@@ -57,15 +57,22 @@ void autonomous() {
   chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
   chassis->setMaxVelocity(50);
 
-  // One-point auto (disabled)
-  // chassis->getModel()->forward(100);
-  // pros::delay(1000);
-  // chassis->getModel()->forward(-100);
-  // pros::delay(500);
-  // chassis->getModel()->forward(100);
-  // pros::delay(1000);
-  // chassis->getModel()->forward(-100);
-  // pros::delay(500);
+  // Init motors
+  okapi::Motor intake_l(INTAKE_LEFT_MOTOR_PORT, true, okapi::AbstractMotor::gearset::green, okapi::AbstractMotor::encoderUnits::rotations);
+  okapi::Motor intake_r(INTAKE_RIGHT_MOTOR_PORT, false, okapi::AbstractMotor::gearset::green, okapi::AbstractMotor::encoderUnits::rotations);
+  okapi::Motor rollers_front(ROLLERS_FRONT_MOTOR_PORT, false, okapi::AbstractMotor::gearset::blue, okapi::AbstractMotor::encoderUnits::rotations);
+  okapi::Motor rollers_back(ROLLERS_BACK_MOTOR_PORT, true, okapi::AbstractMotor::gearset::blue, okapi::AbstractMotor::encoderUnits::rotations);
+
+  // 1-point
+  rollers_front.moveVelocity(600);
+  rollers_back.moveVelocity(600);
+  intake_l.moveVelocity(200);
+  intake_r.moveVelocity(200);
+  pros::delay(5000);
+  rollers_front.moveVelocity(0);
+  rollers_back.moveVelocity(0);
+  intake_l.moveVelocity(0);
+  intake_r.moveVelocity(0);
 }
 
 /**
