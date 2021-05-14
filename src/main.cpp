@@ -55,7 +55,7 @@ void autonomous() {
   // Init chassis controller and set brake mode + velocity
   std::shared_ptr<okapi::OdomChassisController> chassis = build_chassis_controller();
   chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
-  chassis->setMaxVelocity(50);
+  chassis->setMaxVelocity(100);
 
   // Init motors
   okapi::Motor intake_l(INTAKE_LEFT_MOTOR_PORT, true, okapi::AbstractMotor::gearset::green, okapi::AbstractMotor::encoderUnits::rotations);
@@ -68,7 +68,47 @@ void autonomous() {
   rollers_back.moveVelocity(600);
   intake_l.moveVelocity(200);
   intake_r.moveVelocity(200);
-  pros::delay(5000);
+  pros::delay(1000);
+  rollers_front.moveVelocity(0);
+  rollers_back.moveVelocity(0);
+  intake_l.moveVelocity(0);
+  intake_r.moveVelocity(0);
+
+  // Set up position to intake ball
+  chassis->moveDistance(15_cm);
+  pros::delay(200);
+  chassis->turnAngle(110_deg);
+  chassis->setMaxVelocity(200);
+  chassis->moveDistance(-10_cm);
+  chassis->setMaxVelocity(100);
+  pros::delay(500);
+  chassis->moveDistance(15_cm);
+  pros::delay(200);
+  chassis->turnAngle(115_deg);    // over-correct
+  pros::delay(200);
+
+  // Intake ball
+  chassis->setMaxVelocity(50);
+  chassis->moveDistanceAsync(30_cm);
+  intake_l.moveVelocity(200);
+  intake_r.moveVelocity(200);
+  chassis->waitUntilSettled();
+  pros::delay(200);
+  intake_l.moveVelocity(0);
+  intake_r.moveVelocity(0);
+
+  // Move back
+  chassis->setMaxVelocity(100);
+  chassis->moveDistance(-53.75_in);
+  pros::delay(500);
+  chassis->turnAngle(-105_deg);
+
+  // Shoot!
+  rollers_front.moveVelocity(600);
+  rollers_back.moveVelocity(600);
+  intake_l.moveVelocity(200);
+  intake_r.moveVelocity(200);
+  pros::delay(1000);
   rollers_front.moveVelocity(0);
   rollers_back.moveVelocity(0);
   intake_l.moveVelocity(0);
