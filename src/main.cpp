@@ -206,10 +206,11 @@ void opcontrol() {
     // Arcade drive
     if (ctrl_mode == ARCADE) {
       float y = controller.getAnalog(okapi::ControllerAnalog::leftY);
-      float x = controller.getAnalog(okapi::ControllerAnalog::leftX);
+      float left_x = controller.getAnalog(okapi::ControllerAnalog::leftX);
+      float right_x = controller.getAnalog(okapi::ControllerAnalog::rightX);
 
       double forward = (dt_mode == FAST) ? y : y / 4.0;
-      double yaw = (dt_mode == FAST) ? x / 1.5 : x / 4.0;
+      double yaw = (dt_mode == FAST) ? (left_x / 1.5) + right_x : (left_x / 4.0) + right_x;
 
       chassis->getModel()->arcade(forward, yaw, 0.15);
     }
@@ -246,11 +247,11 @@ void opcontrol() {
     // Rollers
     // ----------
 
-    if (controller.getDigital(okapi::ControllerDigital::L1)) {
+    if (controller.getDigital(okapi::ControllerDigital::L2)) {
       rollers_front.moveVelocity(600);
       rollers_back.moveVelocity(600);
     }
-    else if (controller.getDigital(okapi::ControllerDigital::R1)) {
+    else if (controller.getDigital(okapi::ControllerDigital::R2)) {
       rollers_front.moveVelocity(-600);
       rollers_back.moveVelocity(-600);
     }
