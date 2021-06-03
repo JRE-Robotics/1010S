@@ -80,28 +80,30 @@ void autonomous() {
   chassis->turnAngle(110_deg);
   chassis->setMaxVelocity(200);
   chassis->moveDistance(-10_cm);
-  chassis->setMaxVelocity(100);
-  pros::delay(500);
+  chassis->setMaxVelocity(120);
+  pros::delay(300);
   chassis->moveDistance(15_cm);
   pros::delay(200);
-  chassis->turnAngle(115_deg);    // over-correct
+  chassis->turnAngle(102_deg);    // over-correct
   pros::delay(200);
 
   // Intake ball
-  chassis->setMaxVelocity(50);
+  chassis->setMaxVelocity(80);
   chassis->moveDistanceAsync(30_cm);
   intake_l.moveVelocity(200);
   intake_r.moveVelocity(200);
-  chassis->waitUntilSettled();
+  chassis->waitUntilSettled();    // keep intake running
   pros::delay(200);
-  intake_l.moveVelocity(0);
-  intake_r.moveVelocity(0);
 
   // Move back
-  chassis->setMaxVelocity(100);
-  chassis->moveDistance(-53.75_in);
-  pros::delay(500);
-  chassis->turnAngle(-105_deg);
+  chassis->setMaxVelocity(120);
+  chassis->moveDistance(-30_in);
+  intake_l.moveVelocity(0);
+  intake_r.moveVelocity(0);       // stop intakes
+  pros::delay(200);
+  chassis->turnAngle(-15_deg);    // micro-turn to use wall for align
+  pros::delay(200);
+  chassis->moveDistance(-8_in);
 
   // Shoot!
   rollers_front.moveVelocity(600);
