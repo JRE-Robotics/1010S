@@ -5,7 +5,7 @@
 :wave: **Team 1010S (2020-21)**: [Joe Dai](https://github.com/jdtech3) and [Rex Feng](https://github.com/RexFeng469)
 
 ### Ran in:
-  - None yet :cry:
+  —
 
 ---
 
